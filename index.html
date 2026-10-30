@@ -50,7 +50,7 @@
         .screen {
             display: none;
             width: 100%;
-            max-width: 750px;
+            max-width: 800px;
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 12px;
@@ -206,7 +206,7 @@
             transition: all 0.15s;
         }
 
-        .option-btn:hover {
+        .option-btn:hover, .option-btn.keyboard-active {
             background-color: var(--motorq-lime);
             border-color: var(--text-primary);
             color: var(--text-primary);
@@ -222,23 +222,32 @@
         .chart-container {
             width: 100%;
             margin: 30px auto 0;
-            padding: 20px;
+            padding: 30px 20px;
             background: var(--surface);
             border-radius: 12px;
             border: 1px solid var(--border);
+        }
+        
+        .chart-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            text-align: left;
+            padding-left: 10px;
         }
 
         /* Statistics Grid */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
             gap: 16px;
             margin-top: 30px;
         }
 
         .stat-card {
             background: var(--bg-main);
-            padding: 20px;
+            padding: 20px 10px;
             border-radius: 8px;
             border: 1px solid var(--border);
             display: flex;
@@ -247,7 +256,7 @@
         }
 
         .stat-label {
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             color: var(--text-secondary);
             font-weight: 700;
             text-transform: uppercase;
@@ -256,7 +265,7 @@
         }
 
         .stat-value {
-            font-size: 2rem;
+            font-size: 1.75rem;
             font-weight: 800;
             color: var(--text-primary);
             letter-spacing: -0.03em;
@@ -312,7 +321,7 @@
             <ul style="margin: 0;">
                 <li>Sebelum setiap set, Anda memiliki waktu <strong>10 detik</strong> untuk mengingat 5 simbol.</li>
                 <li>Anda kemudian memiliki waktu <strong>1 menit per set</strong> untuk menemukan simbol yang hilang dari 4 pilihan.</li>
-                <li>Jawab sebanyak dan seakurat mungkin.</li>
+                <li>Jawab sebanyak dan seakurat mungkin menggunakan <strong>Klik Mouse</strong> atau <strong>Tombol Keyboard (A, B, C, D, E)</strong>.</li>
             </ul>
         </div>
         
@@ -343,11 +352,11 @@
         
         <!-- Answer Options -->
         <div class="options-row">
-            <button class="option-btn" onclick="submitAnswer('A')">A</button>
-            <button class="option-btn" onclick="submitAnswer('B')">B</button>
-            <button class="option-btn" onclick="submitAnswer('C')">C</button>
-            <button class="option-btn" onclick="submitAnswer('D')">D</button>
-            <button class="option-btn" onclick="submitAnswer('E')">E</button>
+            <button id="btn-opt-A" class="option-btn" onclick="submitAnswer('A')">A</button>
+            <button id="btn-opt-B" class="option-btn" onclick="submitAnswer('B')">B</button>
+            <button id="btn-opt-C" class="option-btn" onclick="submitAnswer('C')">C</button>
+            <button id="btn-opt-D" class="option-btn" onclick="submitAnswer('D')">D</button>
+            <button id="btn-opt-E" class="option-btn" onclick="submitAnswer('E')">E</button>
         </div>
 
         <!-- Restart Test Button -->
@@ -361,7 +370,7 @@
         
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-label">Rata-rata</div>
+                <div class="stat-label">Rata-rata Skor</div>
                 <div class="stat-value" id="stat-mean">0</div>
             </div>
             <div class="stat-card">
@@ -369,18 +378,33 @@
                 <div class="stat-value" id="stat-variance">0</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">Standar Deviasi</div>
+                <div class="stat-label">Std Deviasi</div>
                 <div class="stat-value" id="stat-stddev">0</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">Kriteria Stabilitas</div>
-                <div class="stat-value" id="stat-stability" style="font-size: 1.6rem;">-</div>
+                <div class="stat-label">Waktu Rata-rata</div>
+                <div class="stat-value" id="stat-avg-time">0s</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Waktu Tercepat</div>
+                <div class="stat-value" id="stat-fastest-time">0s</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Stabilitas</div>
+                <div class="stat-value" id="stat-stability" style="font-size: 1.4rem;">-</div>
             </div>
         </div>
 
         <div class="chart-container">
+            <div class="chart-title">Skor Benar per Set</div>
             <canvas id="resultsChart"></canvas>
         </div>
+        
+        <div class="chart-container" style="margin-top: 20px;">
+            <div class="chart-title">Waktu Rata-rata per Set (Detik)</div>
+            <canvas id="timeChart"></canvas>
+        </div>
+        
         <br>
         <button class="btn-primary" onclick="location.reload()" style="margin-top: 20px;">Ulangi Tes</button>
     </div>
@@ -417,9 +441,21 @@
         let questionsAnswered = 0;
         let currentScore = 0;
         let scores = [];
+        let setTimeAverages = []; // Array untuk menyimpan waktu rata-rata spesifik setiap set
+        
         let currentSymbols = []; 
         let currentMissingLetter = '';
         let timerInterval = null;
+
+        // Tracker Variables for Time
+        let questionStartTime = 0;
+        let totalResponseTime = 0;
+        let totalQuestionsAnsweredAllSets = 0;
+        let fastestTime = Infinity;
+        
+        // Variables for current set timing
+        let currentSetTime = 0;
+        let currentSetQuestionsAnswered = 0;
 
         function selectDuration(sets) {
             TOTAL_SETS = sets;
@@ -445,6 +481,13 @@
         function startTest() {
             currentSet = 1;
             scores = [];
+            setTimeAverages = [];
+            
+            // Reset timers
+            totalResponseTime = 0;
+            totalQuestionsAnsweredAllSets = 0;
+            fastestTime = Infinity;
+
             startNextSet();
         }
 
@@ -456,6 +499,10 @@
 
             questionsAnswered = 0;
             currentScore = 0;
+            
+            // Reset local set timer
+            currentSetTime = 0;
+            currentSetQuestionsAnswered = 0;
 
             let shuffledPool = shuffle([...UNICODE_POOL]);
             currentSymbols = LETTERS.map((letter, index) => {
@@ -538,9 +585,25 @@
                     <div class="symbol-box">${char}</div>
                 </div>
             `).join('');
+
+            // Start timer for this specific question
+            questionStartTime = performance.now();
         }
 
         function submitAnswer(letter) {
+            // Calculate time taken for this answer
+            const timeTaken = performance.now() - questionStartTime;
+            
+            totalResponseTime += timeTaken;
+            totalQuestionsAnsweredAllSets++;
+            
+            currentSetTime += timeTaken;
+            currentSetQuestionsAnswered++;
+            
+            if (timeTaken < fastestTime) {
+                fastestTime = timeTaken;
+            }
+
             if (letter === currentMissingLetter) {
                 currentScore++;
             }
@@ -550,6 +613,13 @@
 
         function endSet() {
             scores.push(currentScore);
+            
+            // Calculate average time for this specific set (in seconds)
+            const setAvgTime = currentSetQuestionsAnswered > 0 
+                ? (currentSetTime / currentSetQuestionsAnswered / 1000) 
+                : 0;
+            setTimeAverages.push(setAvgTime);
+            
             currentSet++;
             startNextSet();
         }
@@ -557,11 +627,17 @@
         function calculateAndShowResults() {
             showScreen('result-screen');
             
+            // Score Statistics
             const n = scores.length;
             const sum = scores.reduce((a, b) => a + b, 0);
             const mean = sum / n;
             const variance = scores.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / n;
             const stdDev = Math.sqrt(variance);
+
+            // Time Statistics Calculation
+            const avgTimeMs = totalQuestionsAnsweredAllSets > 0 ? (totalResponseTime / totalQuestionsAnsweredAllSets) : 0;
+            const avgTimeSec = (avgTimeMs / 1000).toFixed(2);
+            const fastestTimeSec = fastestTime === Infinity ? "0.00" : (fastestTime / 1000).toFixed(2);
 
             let stabilityText = "";
             let stabilityColor = "";
@@ -577,23 +653,30 @@
                 stabilityColor = "var(--danger)"; 
             }
 
+            // Populate DOM
             document.getElementById('stat-mean').innerText = mean.toFixed(1);
             document.getElementById('stat-variance').innerText = variance.toFixed(2);
             document.getElementById('stat-stddev').innerText = stdDev.toFixed(2);
             
+            document.getElementById('stat-avg-time').innerText = avgTimeSec + 's';
+            document.getElementById('stat-fastest-time').innerText = fastestTimeSec + 's';
+
             const stabEl = document.getElementById('stat-stability');
             stabEl.innerText = stabilityText;
             stabEl.style.color = stabilityColor;
             
-            // Chart Setup Motorq Style (Black line, lime points/fill)
+            // Chart.js Global Setup
             Chart.defaults.color = '#52525b';
             Chart.defaults.font.family = "'Inter', sans-serif";
+            
+            const labels = Array.from({length: TOTAL_SETS}, (_, i) => `Set ${i + 1}`);
 
-            const ctx = document.getElementById('resultsChart').getContext('2d');
-            new Chart(ctx, {
+            // 1. Chart: Skor Benar (Motorq Lime Style)
+            const ctxScore = document.getElementById('resultsChart').getContext('2d');
+            new Chart(ctxScore, {
                 type: 'line',
                 data: {
-                    labels: Array.from({length: TOTAL_SETS}, (_, i) => `Set ${i + 1}`),
+                    labels: labels,
                     datasets: [{
                         label: 'Jawaban Benar',
                         data: scores,
@@ -622,16 +705,74 @@
                         }
                     },
                     plugins: {
-                        legend: {
-                            labels: {
-                                color: '#000000',
-                                font: { size: 14, weight: '700' }
-                            }
+                        legend: { display: false } // Sembunyikan legenda karena ada judul div
+                    }
+                }
+            });
+
+            // 2. Chart: Waktu Rata-rata per Set (Minimalist Black Style)
+            const ctxTime = document.getElementById('timeChart').getContext('2d');
+            new Chart(ctxTime, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Detik per Pertanyaan',
+                        data: setTimeAverages,
+                        borderColor: '#000000', 
+                        backgroundColor: 'rgba(0, 0, 0, 0.05)', // Grey transparent fill
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.3,
+                        pointBackgroundColor: '#ffffff',
+                        pointBorderColor: '#000000',
+                        pointBorderWidth: 2,
+                        pointRadius: 6,
+                        pointHoverRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Detik'
+                            },
+                            grid: { color: '#e4e4e7' }
+                        },
+                        x: {
+                            grid: { color: '#e4e4e7' }
                         }
+                    },
+                    plugins: {
+                        legend: { display: false } // Sembunyikan legenda karena ada judul div
                     }
                 }
             });
         }
+
+        // Keyboard Event Listener
+        document.addEventListener('keydown', (event) => {
+            const testScreen = document.getElementById('test-screen');
+            if (!testScreen.classList.contains('active')) return;
+
+            const key = event.key.toUpperCase();
+            
+            if (LETTERS.includes(key)) {
+                submitAnswer(key);
+
+                const btn = document.getElementById(`btn-opt-${key}`);
+                if (btn) {
+                    btn.classList.add('keyboard-active');
+                    setTimeout(() => {
+                        btn.classList.remove('keyboard-active');
+                    }, 150); 
+                }
+            }
+        });
+
     </script>
 </body>
 </html>
