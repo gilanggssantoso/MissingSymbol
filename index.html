@@ -17,7 +17,8 @@
             --accent: #6366f1;
             --accent-hover: #4f46e5;
             --border: #334155;
-            --correct: #10b981;
+            --danger: #ef4444;
+            --danger-hover: #dc2626;
         }
 
         body {
@@ -139,6 +140,23 @@
             box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);
         }
 
+        .btn-secondary {
+            background-color: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 10px 24px;
+            font-size: 1rem;
+            margin-top: 40px;
+            box-shadow: none;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--danger);
+            border-color: var(--danger);
+            color: white;
+            box-shadow: 0 4px 10px -3px rgba(239, 68, 68, 0.4);
+        }
+
         .option-btn {
             background-color: var(--surface);
             border: 2px solid var(--border);
@@ -230,6 +248,9 @@
             <button class="option-btn" onclick="submitAnswer('D')">D</button>
             <button class="option-btn" onclick="submitAnswer('E')">E</button>
         </div>
+
+        <!-- Restart Test Button -->
+        <button class="btn-secondary" onclick="location.reload()">Ulang Tes</button>
     </div>
 
     <!-- RESULT SCREEN -->
@@ -244,6 +265,7 @@
     </div>
 
     <script>
+        // Strictly Monochromatic Native Unicode Symbols (No modern emojis)
         const SAFE_SYMBOLS = [
             // Geometric Shapes
             '■', '□', '▢', '▣', '▤', '▥', '▦', '▧', '▨', '▩', '▪', '▫', '▬', '▭', '▮', '▯', '▰', '▱', 
@@ -258,18 +280,16 @@
             // Common Math Operators
             '∀', '∁', '∂', '∃', '∄', '∅', '∆', '∇', '∈', '∉', '∊', '∋', '∌', '∍', '∎', '∏', '∐', '∑', '−', '∓', '∔', 
             '∕', '∖', '∗', '∘', '∙', '√', '∛', '∜', '∝', '∞', '∟', '∠', '∡', '∢', '∣', '∤', '∥', '∦', '∧', '∨', '∩', '∪', 
-            '∫', '∬', '∭', '∮', '∯', '∰', '∱', '∲', '∳', '∴', '∵', '∶', '∷', '∸', '∹', '∺', '∻', '∼', '∽', '∾', '∿', 
-            // Misc Symbols & Dingbats
+            '∫', '∬', '∭', '∮', '∯', '∰', '∱', '∲', '∳', '∴', '∵', '∶', '∷', '∸', '∹', '∺', '∻', '∼', '∽', '∾', '∿',
+            // Dingbats, Music, Chess & Classic Misc Symbols
             '♠', '♡', '♢', '♣', '♤', '♥', '♦', '♧', '★', '☆', '☎', '☏', '☐', '☑', '☒', '☓', '☚', '☛', '☜', '☝', '☞', '☟', 
             '☠', '☡', '☢', '☣', '☤', '☥', '☦', '☧', '☨', '☩', '☪', '☫', '☬', '☭', '☮', '☯', '☰', '☱', '☲', '☳', '☴', '☵', '☶', '☷',
             '☸', '☹', '☺', '☻', '☼', '☽', '☾', '☿', '♀', '♁', '♂', '♃', '♄', '♅', '♆', '♇', '♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓',
-            // Emojis (Faces, Hands, Objects, Nature)
-            '😀', '😃', '😄', '😆', '😅', '😂', '🙃', '😉', '😇', '😍', '😋', '😜', '🤓', '😎', '🥳', '😔', '😢', '😡', '😱', '🥶', '👽', '👻', '🤖',
-            '👍', '👎', '✌', '🤞', '🤘', '🖐', '✊', '✋', '👆', '👇', '👈', '👉', '👏', '🙌',
-            '🍎', '🍌', '🍉', '🍓', '🍕', '🍔', '☕', '🚗', '✈', '⛵', '🚲', '⚽', '🏀', '🎸', '📷', '📱', '💻', '💡', '☂', '❄', '⛄', '⛅', '⛈'
+            '♔', '♕', '♖', '♗', '♘', '♙', '♚', '♛', '♜', '♝', '♞', '♟', '♩', '♪', '♫', '♬', '♭', '♮', '♯', 
+            '✓', '✔', '✕', '✖', '✗', '✘', '✙', '✚', '✛', '✜', '✝', '✞', '✟', '✠', '✡', '✢', '✣', '✤', '✥', '✦', '✧', '✩', '✪', '✫', '✬', '✭', '✮', '✯', '✰', '✱', '✲', '✳', '✴', '✵', '✶', '✷', '✸', '✹', '✺', '✻', '✼', '✽', '✾', '✿', '❀', '❁', '❂', '❃', '❄', '❅', '❆', '❇', '❈', '❉', '❊', '❋'
         ];
         
-        // Append Variation Selector-15 (\uFE0E) to strongly encourage monochromatic text rendering for all symbols, including emojis.
+        // Ensure variation selector is applied just in case any system tries to colorize them
         const UNICODE_POOL = SAFE_SYMBOLS.map(sym => sym + '\uFE0E');
 
         const LETTERS = ['A', 'B', 'C', 'D', 'E'];
