@@ -9,23 +9,26 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
         :root {
-            --bg-dark: #0f172a;
-            --surface: #1e293b;
-            --surface-hover: #334155;
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --accent: #6366f1;
-            --accent-hover: #4f46e5;
-            --border: #334155;
+            /* Light Theme - Motorq Inspired */
+            --bg-main: #f8fafc; /* Latar belakang abu-abu sangat terang */
+            --surface: #ffffff; /* Kartu putih bersih */
+            --surface-hover: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --accent: #2563eb; /* Biru vibran */
+            --accent-hover: #1d4ed8;
+            --accent-light: #eff6ff;
+            --border: #e2e8f0;
             --danger: #ef4444;
             --danger-hover: #dc2626;
+            --success: #10b981;
+            --warning: #f59e0b;
         }
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             color: var(--text-primary);
-            background-color: var(--bg-dark);
-            background-image: radial-gradient(circle at top right, #1e293b, #0f172a);
+            background-color: var(--bg-main);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -48,13 +51,12 @@
         .screen {
             display: none;
             width: 100%;
-            max-width: 700px;
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(12px);
+            max-width: 750px;
+            background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 24px;
+            border-radius: 16px;
             padding: 40px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
             animation: fadeIn 0.4s ease-out;
         }
 
@@ -65,6 +67,38 @@
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Duration Selector */
+        .duration-selector {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 24px 0;
+            flex-wrap: wrap;
+        }
+
+        .duration-btn {
+            background-color: var(--surface);
+            border: 2px solid var(--border);
+            color: var(--text-secondary);
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .duration-btn:hover {
+            border-color: var(--text-secondary);
+            color: var(--text-primary);
+        }
+
+        .duration-btn.active {
+            background-color: var(--accent-light);
+            border-color: var(--accent);
+            color: var(--accent);
         }
 
         .timer {
@@ -91,8 +125,8 @@
         }
 
         .symbol-box {
-            background: var(--surface-hover);
-            border: 1px solid var(--border);
+            background: var(--surface);
+            border: 2px solid var(--border);
             width: 80px;
             height: 80px;
             display: flex;
@@ -100,18 +134,18 @@
             align-items: center;
             font-size: 40px;
             border-radius: 16px;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
             color: var(--text-primary);
+            transition: transform 0.1s;
         }
 
         .symbol-label {
             font-size: 1.2rem;
             font-weight: 600;
             color: var(--text-secondary);
-            background: var(--bg-dark);
+            background: var(--surface-hover);
             padding: 4px 16px;
             border-radius: 20px;
-            border: 1px solid var(--border);
         }
 
         .options-row {
@@ -121,40 +155,41 @@
             margin-top: 40px;
         }
 
-        button {
+        .btn-primary {
             background-color: var(--accent);
             border: none;
             color: white;
-            padding: 14px 36px;
+            padding: 14px 40px;
             font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
             border-radius: 12px;
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.2);
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
         }
 
-        button:hover {
+        .btn-primary:hover {
             background-color: var(--accent-hover);
             transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
         }
 
         .btn-secondary {
             background-color: transparent;
             border: 1px solid var(--border);
             color: var(--text-secondary);
-            padding: 10px 24px;
+            padding: 12px 28px;
             font-size: 1rem;
+            font-weight: 500;
             margin-top: 40px;
-            box-shadow: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
         }
 
         .btn-secondary:hover {
-            background-color: var(--danger);
-            border-color: var(--danger);
-            color: white;
-            box-shadow: 0 4px 10px -3px rgba(239, 68, 68, 0.4);
+            background-color: var(--surface-hover);
+            color: var(--text-primary);
         }
 
         .option-btn {
@@ -162,32 +197,74 @@
             border: 2px solid var(--border);
             color: var(--text-primary);
             font-size: 1.5rem;
-            width: 70px;
-            height: 70px;
+            font-weight: 600;
+            width: 75px;
+            height: 75px;
             padding: 0;
             border-radius: 16px;
-            box-shadow: none;
+            cursor: pointer;
+            transition: all 0.15s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
 
         .option-btn:hover {
-            background-color: var(--accent);
+            background-color: var(--accent-light);
             border-color: var(--accent);
-            color: white;
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .option-btn:active {
+            transform: translateY(0);
         }
 
         .chart-container {
             width: 100%;
-            margin: 40px auto 0;
+            margin: 30px auto 0;
             padding: 20px;
-            background: var(--bg-dark);
+            background: var(--surface);
             border-radius: 16px;
             border: 1px solid var(--border);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+        /* Statistics Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin-top: 30px;
+        }
+
+        .stat-card {
+            background: var(--surface-hover);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
         }
 
         .divider {
             width: 100%;
             height: 1px;
-            background: linear-gradient(90deg, transparent, var(--border), transparent);
+            background: var(--border);
             margin: 40px 0;
         }
 
@@ -198,6 +275,7 @@
             line-height: 1.8;
             font-size: 1.1rem;
             padding-left: 20px;
+            margin-top: 10px;
         }
 
         li {
@@ -209,19 +287,36 @@
 
     <!-- START SCREEN -->
     <div id="start-screen" class="screen active">
-        <h1 style="margin-bottom: 20px;">Tes Simbol Hilang</h1>
-        <ul>
-            <li>Anda akan menyelesaikan 10 set, masing-masing berisi 50 pertanyaan.</li>
-            <li>Sebelum setiap set, Anda memiliki waktu 10 detik untuk mengingat 5 simbol yang diwakili oleh huruf A, B, C, D, dan E.</li>
-            <li>Anda kemudian memiliki waktu 1 menit per set untuk mengidentifikasi simbol mana yang hilang dari 4 pilihan yang ditampilkan.</li>
-        </ul>
+        <h1 style="margin-bottom: 10px;">Tes Simbol Hilang</h1>
+        <p style="color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 30px;">
+            Latih kecepatan dan ketelitian Anda
+        </p>
+
+        <div style="text-align: center; margin-bottom: 30px;">
+            <h3 style="color: var(--text-primary); margin-bottom: 10px;">Pilih Durasi Tes:</h3>
+            <div class="duration-selector">
+                <button class="duration-btn" id="btn-set-3" onclick="selectDuration(3)">3 Menit (3 Set)</button>
+                <button class="duration-btn" id="btn-set-5" onclick="selectDuration(5)">5 Menit (5 Set)</button>
+                <button class="duration-btn" id="btn-set-8" onclick="selectDuration(8)">8 Menit (8 Set)</button>
+                <button class="duration-btn active" id="btn-set-10" onclick="selectDuration(10)">10 Menit (10 Set)</button>
+            </div>
+        </div>
+
+        <div style="background: var(--surface-hover); padding: 20px; border-radius: 12px; text-align: left;">
+            <ul style="margin: 0;">
+                <li>Sebelum setiap set, Anda memiliki waktu <strong>10 detik</strong> untuk mengingat 5 simbol.</li>
+                <li>Anda kemudian memiliki waktu <strong>1 menit per set</strong> untuk menemukan simbol yang hilang dari 4 pilihan.</li>
+                <li>Jawab sebanyak dan seakurat mungkin.</li>
+            </ul>
+        </div>
+        
         <br><br>
-        <button onclick="startTest()">Mulai Tes</button>
+        <button class="btn-primary" onclick="startTest()">Mulai Tes</button>
     </div>
 
     <!-- MEMORIZE SCREEN -->
     <div id="memorize-screen" class="screen">
-        <h2 id="memorize-set-title">Set 1 / 10</h2>
+        <h2 id="memorize-set-title">Set 1</h2>
         <p style="color: var(--text-secondary); font-size: 1.1rem;">Ingat simbol-simbol berikut:</p>
         <div class="timer" id="memorize-timer">10</div>
         <div class="symbols-row" id="memorize-symbols"></div>
@@ -229,7 +324,7 @@
 
     <!-- TEST SCREEN -->
     <div id="test-screen" class="screen">
-        <h2 id="test-set-title">Set 1 / 10</h2>
+        <h2 id="test-set-title">Set 1</h2>
         <div class="timer" id="test-timer">60</div>
         
         <!-- Reference Symbols -->
@@ -237,7 +332,7 @@
         
         <div class="divider"></div>
 
-        <!-- Question Symbols (Only 4) -->
+        <!-- Question Symbols -->
         <div class="symbols-row" id="question-symbols"></div>
         
         <!-- Answer Options -->
@@ -255,33 +350,49 @@
 
     <!-- RESULT SCREEN -->
     <div id="result-screen" class="screen">
-        <h1>Tes Selesai</h1>
-        <p style="color: var(--text-secondary); font-size: 1.1rem;">Performa Anda selama 10 set:</p>
+        <h1 style="color: var(--text-primary);">Tes Selesai</h1>
+        <p style="color: var(--text-secondary); font-size: 1.1rem;">Statistik Performa Anda</p>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Rata-rata</div>
+                <div class="stat-value" id="stat-mean">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Varians</div>
+                <div class="stat-value" id="stat-variance">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Standar Deviasi</div>
+                <div class="stat-value" id="stat-stddev">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Kriteria Stabilitas</div>
+                <div class="stat-value" id="stat-stability" style="font-size: 1.4rem;">-</div>
+            </div>
+        </div>
+
         <div class="chart-container">
             <canvas id="resultsChart"></canvas>
         </div>
         <br>
-        <button onclick="location.reload()" style="margin-top: 20px;">Ulangi Tes</button>
+        <button class="btn-primary" onclick="location.reload()" style="margin-top: 20px;">Ulangi Tes Baru</button>
     </div>
 
     <script>
         // Strictly Monochromatic Native Unicode Symbols (No modern emojis)
         const SAFE_SYMBOLS = [
-            // Geometric Shapes
             '■', '□', '▢', '▣', '▤', '▥', '▦', '▧', '▨', '▩', '▪', '▫', '▬', '▭', '▮', '▯', '▰', '▱', 
             '▲', '△', '▴', '▵', '▶', '▷', '▸', '▹', '►', '▻', '▼', '▽', '▾', '▿', '◀', '◁', '◂', '◃', '◄', '◅', 
             '◆', '◇', '◈', '◉', '◊', '○', '◌', '◍', '◎', '●', '◐', '◑', '◒', '◓', '◔', '◕', '◖', '◗', 
             '◘', '◙', '◚', '◛', '◜', '◝', '◞', '◟', '◠', '◡', '◢', '◣', '◤', '◥', '◦', '◧', '◨', '◩', '◪', '◫', '◬', '◭', '◮', '◯',
-            // Basic Arrows
             '←', '↑', '→', '↓', '↔', '↕', '↖', '↗', '↘', '↙', '↚', '↛', '↜', '↝', '↞', '↟', '↠', '↡', '↢', '↣', '↤', '↥', '↦', '↧', 
             '↩', '↪', '↫', '↬', '↭', '↮', '↯', '↰', '↱', '↲', '↳', '↴', '↵', '↶', '↷', '↸', '↹', '↺', '↻', 
             '↼', '↽', '↾', '↿', '⇀', '⇁', '⇂', '⇃', '⇄', '⇅', '⇆', '⇇', '⇈', '⇉', '⇊', '⇋', '⇌', '⇍', '⇎', '⇏', 
             '⇐', '⇑', '⇒', '⇓', '⇔', '⇕', '⇖', '⇗', '⇘', '⇙', '⇚', '⇛', '⇜', '⇝', '⇞', '⇟', '⇠', '⇡', '⇢', '⇣', '⇤', '⇥', '⇦', '⇧', '⇨', '⇩', '⇪',
-            // Common Math Operators
             '∀', '∁', '∂', '∃', '∄', '∅', '∆', '∇', '∈', '∉', '∊', '∋', '∌', '∍', '∎', '∏', '∐', '∑', '−', '∓', '∔', 
             '∕', '∖', '∗', '∘', '∙', '√', '∛', '∜', '∝', '∞', '∟', '∠', '∡', '∢', '∣', '∤', '∥', '∦', '∧', '∨', '∩', '∪', 
             '∫', '∬', '∭', '∮', '∯', '∰', '∱', '∲', '∳', '∴', '∵', '∶', '∷', '∸', '∹', '∺', '∻', '∼', '∽', '∾', '∿',
-            // Dingbats, Music, Chess & Classic Misc Symbols
             '♠', '♡', '♢', '♣', '♤', '♥', '♦', '♧', '★', '☆', '☎', '☏', '☐', '☑', '☒', '☓', '☚', '☛', '☜', '☝', '☞', '☟', 
             '☠', '☡', '☢', '☣', '☤', '☥', '☦', '☧', '☨', '☩', '☪', '☫', '☬', '☭', '☮', '☯', '☰', '☱', '☲', '☳', '☴', '☵', '☶', '☷',
             '☸', '☹', '☺', '☻', '☼', '☽', '☾', '☿', '♀', '♁', '♂', '♃', '♄', '♅', '♆', '♇', '♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓',
@@ -289,12 +400,11 @@
             '✓', '✔', '✕', '✖', '✗', '✘', '✙', '✚', '✛', '✜', '✝', '✞', '✟', '✠', '✡', '✢', '✣', '✤', '✥', '✦', '✧', '✩', '✪', '✫', '✬', '✭', '✮', '✯', '✰', '✱', '✲', '✳', '✴', '✵', '✶', '✷', '✸', '✹', '✺', '✻', '✼', '✽', '✾', '✿', '❀', '❁', '❂', '❃', '❄', '❅', '❆', '❇', '❈', '❉', '❊', '❋'
         ];
         
-        // Ensure variation selector is applied just in case any system tries to colorize them
+        // Ensure monochrome rendering
         const UNICODE_POOL = SAFE_SYMBOLS.map(sym => sym + '\uFE0E');
-
         const LETTERS = ['A', 'B', 'C', 'D', 'E'];
         
-        const TOTAL_SETS = 10;
+        let TOTAL_SETS = 10;
         const QUESTIONS_PER_SET = 50;
         const MEMORIZE_DURATION = 10;
         const TEST_DURATION = 60;
@@ -306,6 +416,12 @@
         let currentSymbols = []; 
         let currentMissingLetter = '';
         let timerInterval = null;
+
+        function selectDuration(sets) {
+            TOTAL_SETS = sets;
+            document.querySelectorAll('.duration-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`btn-set-${sets}`).classList.add('active');
+        }
 
         function shuffle(array) {
             let currentIndex = array.length, randomIndex;
@@ -330,7 +446,7 @@
 
         function startNextSet() {
             if (currentSet > TOTAL_SETS) {
-                showResults();
+                calculateAndShowResults();
                 return;
             }
 
@@ -434,10 +550,43 @@
             startNextSet();
         }
 
-        function showResults() {
+        function calculateAndShowResults() {
             showScreen('result-screen');
             
-            Chart.defaults.color = '#94a3b8';
+            // Statistics Calculation
+            const n = scores.length;
+            const sum = scores.reduce((a, b) => a + b, 0);
+            const mean = sum / n;
+            const variance = scores.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / n;
+            const stdDev = Math.sqrt(variance);
+
+            // Stability Criteria Logic
+            // Evaluated by standard deviation (lower std dev = more stable work rate)
+            let stabilityText = "";
+            let stabilityColor = "";
+
+            if (stdDev < 3) {
+                stabilityText = "Sangat Stabil";
+                stabilityColor = "var(--success)"; // Green
+            } else if (stdDev < 6) {
+                stabilityText = "Cukup Stabil";
+                stabilityColor = "var(--warning)"; // Yellow/Amber
+            } else {
+                stabilityText = "Kurang Stabil";
+                stabilityColor = "var(--danger)"; // Red
+            }
+
+            // Populate DOM
+            document.getElementById('stat-mean').innerText = mean.toFixed(1);
+            document.getElementById('stat-variance').innerText = variance.toFixed(2);
+            document.getElementById('stat-stddev').innerText = stdDev.toFixed(2);
+            
+            const stabEl = document.getElementById('stat-stability');
+            stabEl.innerText = stabilityText;
+            stabEl.style.color = stabilityColor;
+            
+            // Chart Setup (Light Theme Styling)
+            Chart.defaults.color = '#475569';
             Chart.defaults.font.family = "'Inter', sans-serif";
 
             const ctx = document.getElementById('resultsChart').getContext('2d');
@@ -448,16 +597,16 @@
                     datasets: [{
                         label: 'Jawaban Benar (Maks 50)',
                         data: scores,
-                        borderColor: '#6366f1',
-                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                        borderColor: '#2563eb', // Accent blue
+                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
                         borderWidth: 3,
                         fill: true,
-                        tension: 0.4,
-                        pointBackgroundColor: '#6366f1',
-                        pointBorderColor: '#1e293b',
+                        tension: 0.3,
+                        pointBackgroundColor: '#2563eb',
+                        pointBorderColor: '#ffffff',
                         pointBorderWidth: 2,
-                        pointRadius: 6,
-                        pointHoverRadius: 8
+                        pointRadius: 5,
+                        pointHoverRadius: 7
                     }]
                 },
                 options: {
@@ -466,24 +615,17 @@
                         y: {
                             beginAtZero: true,
                             max: 50,
-                            grid: {
-                                color: 'rgba(51, 65, 85, 0.5)'
-                            }
+                            grid: { color: '#e2e8f0' }
                         },
                         x: {
-                            grid: {
-                                color: 'rgba(51, 65, 85, 0.5)'
-                            }
+                            grid: { color: '#e2e8f0' }
                         }
                     },
                     plugins: {
                         legend: {
                             labels: {
-                                color: '#f8fafc',
-                                font: {
-                                    size: 14,
-                                    weight: '600'
-                                }
+                                color: '#0f172a',
+                                font: { size: 14, weight: '600' }
                             }
                         }
                     }
